@@ -10,10 +10,65 @@
 
   --font-display: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --animate-levitate: levitate 6s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
+
+  @keyframes levitate {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@utility glass {
+  background-color: color-mix(in srgb, var(--color-surface) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-champagne) 14%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+@utility text-gold-gradient {
+  background: linear-gradient(120deg, #b8902a, var(--color-champagne) 45%, var(--color-gold));
+  background-clip: text;
+  color: transparent;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  background: var(--color-matte);
+  background: radial-gradient(ellipse at 30% 40%, #1c170c 0%, var(--color-matte) 55%);
+  background-color: var(--color-matte);
   color: var(--color-ivory);
   font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-levitate,
+  .animate-marquee {
+    animation: none;
+  }
 }
