@@ -20,7 +20,7 @@ export function buildOrderMessage(items: CartItem[]) {
   });
 
   return [
-    "¡Hola Perfum Luxury! 👋 Quiero realizar el siguiente pedido:",
+    "¡Hola Aura Luxury! 👋 Quiero realizar el siguiente pedido:",
     "",
     "🛒 Resumen del Pedido:",
     ...lines,

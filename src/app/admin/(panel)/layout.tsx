@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { logout } from "@/app/admin/actions";
 
-export const metadata: Metadata = { title: "Admin · Perfum Luxury", robots: { index: false } };
+export const metadata: Metadata = { title: "Admin · Aura Luxury", robots: { index: false } };
 
 // El panel siempre lee datos actuales de la base.
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="sticky top-0 z-10 border-b border-champagne/10 bg-matte/90 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <Link href="/admin" className="font-display text-xl text-gold-gradient">
-            Perfum Luxury · Admin
+            Aura Luxury · Admin
           </Link>
           <nav className="flex items-center gap-1 text-sm">
             {LINKS.map(({ href, label }) => (

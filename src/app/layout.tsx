@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Perfum Luxury",
+  title: "Aura Luxury",
   description:
     "Perfumería de diseñador, árabe y de nicho. Fragancias 100% originales con precios en ARS y USD.",
 };
