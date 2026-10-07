@@ -8,7 +8,9 @@ import { ProductInfo } from "@/components/ProductInfo";
 import { BADGES, PRESENTATION_BADGES } from "@/lib/labels";
 import type { ProductView } from "@/lib/products";
 
-const SWIPE_THRESHOLD = 80;
+// Un gesto cuenta como swipe si recorre bastante distancia o si es un "flick" rápido.
+const SWIPE_DISTANCE = 80;
+const SWIPE_VELOCITY = 450;
 
 type Props = {
   products: ProductView[];
@@ -30,9 +32,10 @@ export function Showcase({ products, index, direction, onNavigate }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onNavigate]);
 
-  const onDragEnd = (_: unknown, info: PanInfo) => {
-    if (info.offset.x < -SWIPE_THRESHOLD) onNavigate(1);
-    else if (info.offset.x > SWIPE_THRESHOLD) onNavigate(-1);
+  const onDragEnd = (_: unknown, { offset, velocity }: PanInfo) => {
+    const swipe = Math.abs(offset.x) > SWIPE_DISTANCE || (Math.abs(velocity.x) > SWIPE_VELOCITY && Math.abs(offset.x) > 20);
+    if (!swipe) return;
+    onNavigate(offset.x < 0 ? 1 : -1);
   };
 
   const badges = [BADGES[product.badge], PRESENTATION_BADGES[product.presentation]].filter(
@@ -52,6 +55,7 @@ export function Showcase({ products, index, direction, onNavigate }: Props) {
           drag={products.length > 1 ? "x" : false}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.25}
+          dragDirectionLock
           onDragEnd={onDragEnd}
           style={{ transformPerspective: 1200 }}
           className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(150px,1fr)_minmax(0,auto)] gap-4 px-4 pb-2 md:grid-cols-2 md:grid-rows-1 md:items-center md:gap-10 md:px-12"
