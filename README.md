@@ -41,6 +41,20 @@ En `/admin` (con el usuario y la contraseña de `.env`) se puede:
 
 `Product` (ver `prisma/schema.prisma`): nombre, marca, categoría (`Arabian`, `Designer`, `Niche`, `Decant`), género (`Masculino`, `Femenino`, `Unisex`), presentación (`Cerrado`, `Tester`, `Mini Talla`), precios ARS y USD, notas de salida, corazón y fondo, usos recomendados (`Gym`, `Office`, `Night`, `Summer`, `Winter`), duración en horas, badge (`Best Seller`, `Viral`, `Offer`, `None`), imagen y stock.
 
+## Deploy en Vercel
+
+1. Crear una base PostgreSQL. Se recomienda [Neon](https://neon.tech) en la región São Paulo (`aws-sa-east-1`), que queda cerca de la región de Vercel elegida en `vercel.json` (`gru1`). Copiar la cadena de conexión **directa** (la que no dice `-pooler`), porque las migraciones la necesitan.
+2. En Vercel, importar el repositorio desde GitHub. Next.js se detecta solo.
+3. En *Settings → Environment Variables* cargar `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD` y `AUTH_SECRET` (al menos 32 caracteres al azar).
+4. Deployar. El script `vercel-build` aplica las migraciones pendientes (`prisma migrate deploy`) y después compila.
+5. Solo la primera vez, cargar el catálogo de ejemplo y los ajustes por defecto desde tu computadora, con la misma `DATABASE_URL` en `.env`:
+   ```bash
+   npm run db:seed
+   ```
+   Si preferís arrancar vacío, alcanza con entrar a `/admin`, ir a Ajustes y guardar la cotización y el WhatsApp.
+
+Las fotos de los frascos van en `public/products/<slug>.webp` o como URL https desde el panel. Mientras una foto carga o si falla, se muestra un frasco dorado con las iniciales de la marca.
+
 ## Hoja de ruta
 
 1. Setup del proyecto y base de datos

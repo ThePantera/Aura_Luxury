@@ -57,6 +57,12 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  /* Sin rebote ni "pull to refresh": la tienda se comporta como una app. */
+  overscroll-behavior: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {

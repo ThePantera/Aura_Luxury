@@ -36,6 +36,14 @@ export function CartDrawer({ whatsappPhone }: { whatsappPhone: string }) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            drag="x"
+            dragDirectionLock
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0, right: 0.6 }}
+            onDragEnd={(_, { offset, velocity }) => {
+              // Deslizar hacia la derecha cierra el carrito, como en una app.
+              if (offset.x > 100 || velocity.x > 500) close();
+            }}
             onClick={(event) => event.stopPropagation()}
             className="flex h-full w-full max-w-md flex-col border-l border-champagne/15 bg-surface"
           >
