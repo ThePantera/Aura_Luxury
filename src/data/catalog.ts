@@ -1,4 +1,4 @@
-import type { Badge, Category, Presentation, Usage } from "../generated/prisma/enums";
+import type { Badge, Category, Gender, Presentation, Usage } from "../generated/prisma/enums";
 
 // Cotización implícita en los ejemplos de referencia (56.187,50 ARS = 36,25 USD).
 // En la Fase 4 pasa a ser editable desde el panel de ajustes.
@@ -11,6 +11,7 @@ export type CatalogProduct = {
   name: string;
   brand: string;
   category: Category;
+  gender: Gender;
   presentation: Presentation;
   priceARS: number;
   // Si falta, se calcula con USD_RATE.
@@ -31,6 +32,7 @@ export const catalog: CatalogProduct[] = [
     name: "Sauvage Elixir",
     brand: "Dior",
     category: "Designer",
+    gender: "Masculino",
     presentation: "Cerrado",
     priceARS: 518700,
     topNotes: ["Nuez moscada", "Canela", "Cardamomo", "Pomelo"],
@@ -47,6 +49,7 @@ export const catalog: CatalogProduct[] = [
     name: "Khamrah",
     brand: "Lattafa",
     category: "Arabian",
+    gender: "Unisex",
     presentation: "Cerrado",
     priceARS: 56187.5,
     priceUSD: 36.25,
@@ -64,6 +67,7 @@ export const catalog: CatalogProduct[] = [
     name: "Blue Seduction",
     brand: "Antonio Banderas",
     category: "Designer",
+    gender: "Masculino",
     presentation: "Cerrado",
     priceARS: 31785,
     topNotes: ["Melón", "Bergamota", "Menta"],
@@ -80,6 +84,7 @@ export const catalog: CatalogProduct[] = [
     name: "Le Male Elixir",
     brand: "Jean Paul Gaultier",
     category: "Designer",
+    gender: "Masculino",
     presentation: "Cerrado",
     priceARS: 296595,
     topNotes: ["Lavanda", "Menta"],
@@ -96,6 +101,7 @@ export const catalog: CatalogProduct[] = [
     name: "Yara Rosa",
     brand: "Lattafa",
     category: "Arabian",
+    gender: "Femenino",
     presentation: "Cerrado",
     priceARS: 67812.5,
     priceUSD: 43.75,

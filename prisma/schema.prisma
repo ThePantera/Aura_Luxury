@@ -30,6 +30,12 @@ enum Usage {
   Winter
 }
 
+enum Gender {
+  Masculino
+  Femenino
+  Unisex
+}
+
 enum Badge {
   BestSeller @map("Best Seller")
   Viral
@@ -43,6 +49,7 @@ model Product {
   name             String
   brand            String
   category         Category
+  gender           Gender       @default(Unisex)
   presentation     Presentation @default(Cerrado)
   priceARS         Decimal      @db.Decimal(12, 2)
   priceUSD         Decimal      @db.Decimal(10, 2)
