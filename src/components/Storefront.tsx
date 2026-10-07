@@ -1,20 +1,29 @@
 "use client";
 
 import { AnimatePresence } from "motion/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AdvisorDialog } from "@/components/AdvisorDialog";
 import { BenefitsTicker } from "@/components/BenefitsTicker";
 import { BottomNav, type CategoryFilter } from "@/components/BottomNav";
+import { CartDrawer } from "@/components/CartDrawer";
 import { Header } from "@/components/Header";
 import { SearchDialog } from "@/components/SearchDialog";
 import { Showcase } from "@/components/Showcase";
 import type { Usage } from "@/generated/prisma/enums";
 import type { ProductView } from "@/lib/products";
+import { useCart } from "@/store/cart";
 
 export function Storefront({ products }: { products: ProductView[] }) {
   const [category, setCategory] = useState<CategoryFilter>("All");
   const [usage, setUsage] = useState<Usage | null>(null);
   const [[index, direction], setPosition] = useState<[number, number]>([0, 0]);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
+
+  // El carrito guardado en el navegador se carga después de hidratar.
+  useEffect(() => {
+    useCart.persist.rehydrate();
+  }, []);
 
   const visible = useMemo(
     () =>
@@ -42,16 +51,17 @@ export function Storefront({ products }: { products: ProductView[] }) {
     setPosition([0, 0]);
   };
 
-  const selectFromSearch = (product: ProductView) => {
+  const showProduct = (product: ProductView) => {
     setCategory("All");
     setUsage(null);
     setPosition([products.indexOf(product), 0]);
     setSearchOpen(false);
+    setAdvisorOpen(false);
   };
 
   return (
     <div className="grid h-dvh grid-cols-[minmax(0,1fr)] grid-rows-[auto_auto_minmax(0,1fr)_auto] overflow-hidden">
-      <Header onSearch={() => setSearchOpen(true)} />
+      <Header onSearch={() => setSearchOpen(true)} onAdvisor={() => setAdvisorOpen(true)} />
       <BenefitsTicker />
 
       <main className="min-h-0 pt-4">
@@ -78,9 +88,17 @@ export function Storefront({ products }: { products: ProductView[] }) {
 
       <AnimatePresence>
         {searchOpen && (
-          <SearchDialog products={products} onSelect={selectFromSearch} onClose={() => setSearchOpen(false)} />
+          <SearchDialog products={products} onSelect={showProduct} onClose={() => setSearchOpen(false)} />
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {advisorOpen && (
+          <AdvisorDialog products={products} onSelect={showProduct} onClose={() => setAdvisorOpen(false)} />
+        )}
+      </AnimatePresence>
+
+      <CartDrawer />
     </div>
   );
 }

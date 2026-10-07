@@ -1,5 +1,5 @@
 import { catalog, toUSD } from "@/data/catalog";
-import type { Badge, Category, Presentation, Usage } from "@/generated/prisma/enums";
+import type { Badge, Category, Gender, Presentation, Usage } from "@/generated/prisma/enums";
 
 // Forma serializable del producto que reciben los componentes de cliente.
 export type ProductView = {
@@ -8,6 +8,7 @@ export type ProductView = {
   name: string;
   brand: string;
   category: Category;
+  gender: Gender;
   presentation: Presentation;
   priceARS: number;
   priceUSD: number;
