@@ -1,10 +1,7 @@
 import type { Badge, Category, Gender, Presentation, Usage } from "../generated/prisma/enums";
+import { DEFAULT_USD_RATE } from "../lib/defaults";
 
-// Cotización implícita en los ejemplos de referencia (56.187,50 ARS = 36,25 USD).
-// En la Fase 4 pasa a ser editable desde el panel de ajustes.
-export const USD_RATE = 1550;
-
-export const toUSD = (ars: number) => Math.round((ars / USD_RATE) * 100) / 100;
+export const toUSD = (ars: number, rate = DEFAULT_USD_RATE) => Math.round((ars / rate) * 100) / 100;
 
 export type CatalogProduct = {
   slug: string;
@@ -14,7 +11,7 @@ export type CatalogProduct = {
   gender: Gender;
   presentation: Presentation;
   priceARS: number;
-  // Si falta, se calcula con USD_RATE.
+  // Si falta, se calcula con la cotización por defecto.
   priceUSD?: number;
   topNotes: string[];
   heartNotes: string[];

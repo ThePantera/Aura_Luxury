@@ -11,13 +11,19 @@ import {
   Tag,
   type LucideIcon,
 } from "lucide-react";
-import type { Badge, Category, Presentation, Usage } from "@/generated/prisma/enums";
+import type { Badge, Category, Gender, Presentation, Usage } from "@/generated/prisma/enums";
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   Designer: "Diseñador",
   Arabian: "Árabes",
   Niche: "Nicho & Lujo",
   Decant: "Decants & Travel",
+};
+
+export const GENDER_LABELS: Record<Gender, string> = {
+  Masculino: "Masculino",
+  Femenino: "Femenino",
+  Unisex: "Unisex",
 };
 
 export const USAGE_OPTIONS: Record<Usage, { label: string; icon: LucideIcon }> = {
