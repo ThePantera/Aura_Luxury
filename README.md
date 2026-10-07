@@ -10,7 +10,7 @@ Stack: Next.js (App Router), TypeScript, TailwindCSS, Lucide, Prisma y PostgreSQ
    ```bash
    npm install
    ```
-2. Copiar `.env.example` a `.env` y completar `DATABASE_URL` con una base PostgreSQL.
+2. Copiar `.env.example` a `.env` y completar `DATABASE_URL` (PostgreSQL) y las variables del panel: `ADMIN_USER`, `ADMIN_PASSWORD` y `AUTH_SECRET` (al menos 32 caracteres al azar, por ejemplo `openssl rand -base64 32`).
 3. Crear las tablas y cargar el catálogo inicial:
    ```bash
    npm run db:migrate
@@ -20,6 +20,14 @@ Stack: Next.js (App Router), TypeScript, TailwindCSS, Lucide, Prisma y PostgreSQ
    ```bash
    npm run dev
    ```
+
+## Panel de administración
+
+En `/admin` (con el usuario y la contraseña de `.env`) se puede:
+
+- Crear, editar y eliminar perfumes.
+- Importar el catálogo desde Excel (.xlsx) o CSV. Hay una plantilla descargable en la misma página. Los perfumes se identifican por marca y nombre: los existentes se actualizan y los nuevos se crean. Las filas con errores se saltean y se informan.
+- Cambiar la cotización del dólar (y opcionalmente recalcular todos los precios en USD) y el teléfono de WhatsApp que recibe los pedidos.
 
 ## Scripts de base de datos
 

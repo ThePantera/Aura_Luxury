@@ -66,3 +66,11 @@ model Product {
 
   @@index([category])
 }
+
+// Ajustes generales editables desde /admin (una sola fila, id = 1).
+model Setting {
+  id            Int      @id @default(1)
+  usdRate       Decimal  @db.Decimal(12, 2)
+  whatsappPhone String
+  updatedAt     DateTime @updatedAt
+}

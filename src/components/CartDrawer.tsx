@@ -7,7 +7,7 @@ import { PRESENTATION_LABELS, formatARS, formatUSD } from "@/lib/labels";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cartTotals, useCart } from "@/store/cart";
 
-export function CartDrawer() {
+export function CartDrawer({ whatsappPhone }: { whatsappPhone: string }) {
   const { items, isOpen, close, setQuantity, remove } = useCart();
   const totals = cartTotals(items);
 
@@ -114,7 +114,7 @@ export function CartDrawer() {
                   </div>
                   <p className="text-right text-xs text-ivory/50">aprox. {formatUSD(totals.usd)}</p>
                   <a
-                    href={buildWhatsAppUrl(items)}
+                    href={buildWhatsAppUrl(items, whatsappPhone)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-4 flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] font-semibold text-matte transition hover:brightness-110"

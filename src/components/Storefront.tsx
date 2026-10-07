@@ -13,7 +13,9 @@ import type { Usage } from "@/generated/prisma/enums";
 import type { ProductView } from "@/lib/products";
 import { useCart } from "@/store/cart";
 
-export function Storefront({ products }: { products: ProductView[] }) {
+type Props = { products: ProductView[]; whatsappPhone: string };
+
+export function Storefront({ products, whatsappPhone }: Props) {
   const [category, setCategory] = useState<CategoryFilter>("All");
   const [usage, setUsage] = useState<Usage | null>(null);
   const [[index, direction], setPosition] = useState<[number, number]>([0, 0]);
@@ -98,7 +100,7 @@ export function Storefront({ products }: { products: ProductView[] }) {
         )}
       </AnimatePresence>
 
-      <CartDrawer />
+      <CartDrawer whatsappPhone={whatsappPhone} />
     </div>
   );
 }

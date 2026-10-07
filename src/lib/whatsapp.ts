@@ -1,8 +1,7 @@
+import { DEFAULT_WHATSAPP_PHONE } from "@/lib/defaults";
 import { PRESENTATION_LABELS } from "@/lib/labels";
 import { cartTotals, type CartItem } from "@/store/cart";
 
-// Número oficial del PRD (+54 9 11 2388-4030). En la Fase 4 pasa al panel de ajustes.
-export const WHATSAPP_NUMBER = "5491123884030";
 
 const amount = (value: number) =>
   new Intl.NumberFormat("es-AR", {
@@ -32,6 +31,6 @@ export function buildOrderMessage(items: CartItem[]) {
   ].join("\n");
 }
 
-export function buildWhatsAppUrl(items: CartItem[], phone = WHATSAPP_NUMBER) {
+export function buildWhatsAppUrl(items: CartItem[], phone = DEFAULT_WHATSAPP_PHONE) {
   return `https://wa.me/${phone}?text=${encodeURIComponent(buildOrderMessage(items))}`;
 }
