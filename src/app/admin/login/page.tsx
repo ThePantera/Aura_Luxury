@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LoginForm } from "@/components/admin/LoginForm";
 
-export const metadata: Metadata = { title: "Ingresar · Perfum Luxury", robots: { index: false } };
+export const metadata: Metadata = { title: "Ingresar · Aura Luxury", robots: { index: false } };
 
 export default function LoginPage() {
   return (

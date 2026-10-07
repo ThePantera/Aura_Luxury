@@ -1,4 +1,4 @@
-# Perfum Luxury
+# Aura Luxury
 
 E-commerce de perfumería de diseñador, árabe y de nicho, con experiencia 100vh sin scroll, precios en ARS y USD y checkout por WhatsApp.
 

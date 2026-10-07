@@ -66,7 +66,7 @@ export function Storefront({ products, whatsappPhone }: Props) {
       <Header onSearch={() => setSearchOpen(true)} onAdvisor={() => setAdvisorOpen(true)} />
       <BenefitsTicker />
 
-      <main className="min-h-0 pt-4">
+      <main className="min-h-0 pt-3 sm:pt-5">
         {visible.length > 0 ? (
           <Showcase products={visible} index={Math.min(index, visible.length - 1)} direction={direction} onNavigate={navigate} />
         ) : (

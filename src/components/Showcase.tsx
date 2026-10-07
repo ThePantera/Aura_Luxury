@@ -58,20 +58,26 @@ export function Showcase({ products, index, direction, onNavigate }: Props) {
           dragDirectionLock
           onDragEnd={onDragEnd}
           style={{ transformPerspective: 1200 }}
-          className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(150px,1fr)_minmax(0,auto)] gap-4 px-4 pb-2 md:grid-cols-2 md:grid-rows-1 md:items-center md:gap-10 md:px-12"
+          className="mx-auto grid h-full min-h-0 max-w-7xl grid-cols-[minmax(0,1fr)] grid-rows-[minmax(170px,1fr)_minmax(0,auto)] gap-3 px-4 pb-3 sm:gap-6 sm:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:grid-rows-1 lg:items-center lg:gap-20 lg:px-16"
         >
           <div className="relative h-full min-h-0">
-            <div className="absolute inset-x-[15%] bottom-[6%] h-6 rounded-[50%] bg-gold/25 blur-2xl" aria-hidden />
-            <div className="relative h-full animate-levitate">
+            {/* Vitrina: halo dorado, anillo fino y sombra de apoyo bajo el frasco. */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+              <div className="aspect-square h-[78%] max-h-[520px] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.22)_0%,rgba(212,175,55,0.07)_45%,transparent_70%)] blur-xl" />
+              <div className="absolute aspect-square h-[70%] max-h-[460px] rounded-full border border-gold/10" />
+            </div>
+            <div className="pointer-events-none absolute inset-x-[22%] bottom-[5%] h-5 rounded-[50%] bg-black/80 blur-xl" aria-hidden />
+            <div className="pointer-events-none absolute inset-x-[30%] bottom-[6%] h-2 rounded-[50%] bg-gold/30 blur-md" aria-hidden />
+            <div className="relative h-full px-[8%] py-[3%] sm:py-[6%] drop-shadow-[0_30px_40px_rgba(0,0,0,0.75)] animate-levitate">
               <BottleImage src={product.imageUrl} name={product.name} brand={product.brand} />
             </div>
-            <ul className="absolute left-0 top-0 flex flex-col gap-2">
+            <ul className="absolute left-0 top-0 flex flex-col items-start gap-2">
               {badges.map(({ label, icon: Icon }) => (
                 <li
                   key={label}
-                  className="glass flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-champagne"
+                  className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-black/50 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-champagne backdrop-blur-md sm:text-[11px]"
                 >
-                  <Icon className="size-3.5 text-gold" aria-hidden />
+                  <Icon className="size-3.5 text-gold" strokeWidth={1.75} aria-hidden />
                   {label}
                 </li>
               ))}
@@ -88,7 +94,7 @@ export function Showcase({ products, index, direction, onNavigate }: Props) {
             type="button"
             onClick={() => onNavigate(-1)}
             aria-label="Perfume anterior"
-            className="glass absolute left-2 top-1/3 hidden size-11 items-center justify-center rounded-full text-champagne transition hover:text-gold md:top-1/2 md:flex md:-translate-y-1/2"
+            className="orb absolute left-3 top-1/3 hidden size-12 bg-black/40 backdrop-blur-md md:flex lg:left-5 lg:top-1/2 lg:-translate-y-1/2"
           >
             <ChevronLeft className="size-5" aria-hidden />
           </button>
@@ -96,15 +102,21 @@ export function Showcase({ products, index, direction, onNavigate }: Props) {
             type="button"
             onClick={() => onNavigate(1)}
             aria-label="Perfume siguiente"
-            className="glass absolute right-2 top-1/3 hidden size-11 items-center justify-center rounded-full text-champagne transition hover:text-gold md:top-1/2 md:flex md:-translate-y-1/2"
+            className="orb absolute right-3 top-1/3 hidden size-12 bg-black/40 backdrop-blur-md md:flex lg:right-5 lg:top-1/2 lg:-translate-y-1/2"
           >
             <ChevronRight className="size-5" aria-hidden />
           </button>
         </>
       )}
 
-      <p className="pointer-events-none absolute right-4 top-0 text-xs tabular-nums text-ivory/50 md:right-12" aria-live="polite">
-        {index + 1} / {products.length}
+      <p
+        className="pointer-events-none absolute right-4 top-0 flex items-center gap-2 font-display text-sm tabular-nums text-ivory/60 sm:right-10 lg:right-16"
+        aria-live="polite"
+      >
+        <span className="text-champagne">{String(index + 1).padStart(2, "0")}</span>
+        <span className="h-px w-6 bg-gold/40" aria-hidden />
+        <span>{String(products.length).padStart(2, "0")}</span>
+        <span className="sr-only">de {products.length}</span>
       </p>
     </section>
   );

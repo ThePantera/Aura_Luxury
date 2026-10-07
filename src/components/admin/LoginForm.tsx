@@ -10,7 +10,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={submitWithoutReset(action)} className="glass grid w-full max-w-sm gap-4 rounded-3xl p-6">
-      <h1 className="font-display text-3xl text-gold-gradient">Perfum Luxury</h1>
+      <h1 className="font-display text-3xl text-gold-gradient">Aura Luxury</h1>
       <p className="-mt-2 text-sm text-ivory/60">Panel de administración</p>
       {state.error && <Alert tone="error">{state.error}</Alert>}
       <Field label="Usuario">
