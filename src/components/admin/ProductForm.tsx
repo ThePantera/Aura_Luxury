@@ -35,6 +35,9 @@ export function ProductForm({ product }: { product?: ProductView }) {
         <Field label="Presentación">
           <Select name="presentation" defaultValue={product?.presentation ?? "Cerrado"} options={PRESENTATION_LABELS} />
         </Field>
+        <Field label="Mililitros (ml)" hint="Si lo dejás vacío se toma del nombre (ej. 100 ml).">
+          <TextInput name="sizeMl" inputMode="decimal" defaultValue={product?.sizeMl?.toString().replace(".", ",")} />
+        </Field>
         <Field label="Badge">
           <Select name="badge" defaultValue={product?.badge ?? "None"} options={BADGE_OPTIONS} />
         </Field>

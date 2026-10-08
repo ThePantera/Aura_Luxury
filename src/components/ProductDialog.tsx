@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { BottleImage } from "@/components/BottleImage";
 import { ProductInfo } from "@/components/ProductInfo";
 import type { ProductView } from "@/lib/products";
+import { displayName } from "@/lib/size";
 
 type Props = { product: ProductView; onClose: () => void };
 
@@ -32,7 +33,7 @@ export function ProductDialog({ product, onClose }: Props) {
         transition={{ type: "spring", stiffness: 300, damping: 32 }}
         role="dialog"
         aria-modal="true"
-        aria-label={`${product.brand} ${product.name}`}
+        aria-label={`${product.brand} ${displayName(product)}`}
         onClick={(event) => event.stopPropagation()}
         className="relative grid max-h-[92dvh] w-full max-w-5xl overflow-y-auto rounded-t-[1.75rem] border border-gold/15 bg-[linear-gradient(160deg,#1f1b13_0%,#141311_45%,#0e0e0d_100%)] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.95)] no-scrollbar sm:rounded-[1.75rem] md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:overflow-hidden"
       >

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { BottleImage } from "@/components/BottleImage";
 import { BADGES, PRESENTATION_BADGES, PRESENTATION_LABELS, formatARS, formatUSD } from "@/lib/labels";
 import type { ProductView } from "@/lib/products";
+import { displayName, formatMl } from "@/lib/size";
 import { useCart } from "@/store/cart";
 
 type Props = { product: ProductView; onOpen: (product: ProductView) => void };
@@ -20,6 +21,7 @@ export function ProductCard({ product, onOpen }: Props) {
   }, [added]);
 
   const soldOut = product.stock === 0;
+  const name = displayName(product);
   const badge = BADGES[product.badge] ?? PRESENTATION_BADGES[product.presentation];
 
   return (
@@ -28,7 +30,7 @@ export function ProductCard({ product, onOpen }: Props) {
         type="button"
         onClick={() => onOpen(product)}
         className="relative block aspect-[4/5] w-full overflow-hidden bg-[radial-gradient(circle_at_50%_45%,rgba(212,175,55,0.14)_0%,transparent_65%)] focus-visible:outline-2 focus-visible:outline-gold"
-        aria-label={`Ver ${product.brand} ${product.name}`}
+        aria-label={`Ver ${product.brand} ${name}`}
       >
         <div className="absolute inset-0 px-[14%] py-[12%] transition duration-500 group-hover:scale-[1.04]">
           <BottleImage
@@ -55,10 +57,13 @@ export function ProductCard({ product, onOpen }: Props) {
         <p className="truncate text-[10px] font-medium uppercase tracking-[0.22em] text-gold">{product.brand}</p>
         <h3 className="line-clamp-2 font-display text-[15px] leading-snug text-ivory sm:text-[17px]">
           <button type="button" onClick={() => onOpen(product)} className="text-left hover:text-champagne">
-            {product.name}
+            {name}
           </button>
         </h3>
-        <p className="text-[11px] italic text-ivory/50">{PRESENTATION_LABELS[product.presentation]}</p>
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ivory/50">
+          {product.sizeMl && <SizeTag ml={product.sizeMl} />}
+          <span className="italic">{PRESENTATION_LABELS[product.presentation]}</span>
+        </p>
 
         <div className="mt-auto flex items-end justify-between gap-2 pt-2">
           <div className="min-w-0">
@@ -72,7 +77,7 @@ export function ProductCard({ product, onOpen }: Props) {
               setAdded(true);
             }}
             disabled={soldOut}
-            aria-label={`Agregar ${product.name} al carrito`}
+            aria-label={`Agregar ${name} al carrito`}
             className={`flex size-9 shrink-0 items-center justify-center rounded-full border transition sm:size-10 disabled:opacity-30 ${
               added
                 ? "bg-gold-sheen border-gold text-matte"
@@ -84,5 +89,17 @@ export function ProductCard({ product, onOpen }: Props) {
         </div>
       </div>
     </article>
+  );
+}
+
+export function SizeTag({ ml, large = false }: { ml: number; large?: boolean }) {
+  return (
+    <span
+      className={`rounded-full border border-gold/40 font-medium not-italic tabular-nums text-champagne ${
+        large ? "px-3 py-0.5 text-sm" : "px-2 py-px text-[11px]"
+      }`}
+    >
+      {formatMl(ml)}
+    </span>
   );
 }

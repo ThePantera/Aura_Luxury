@@ -4,6 +4,7 @@ import { MessageCircle, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { PRESENTATION_LABELS, formatARS, formatUSD } from "@/lib/labels";
+import { displayName, formatMl } from "@/lib/size";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cartTotals, useCart } from "@/store/cart";
 
@@ -73,8 +74,11 @@ export function CartDrawer({ whatsappPhone }: { whatsappPhone: string }) {
                     <li key={product.id} className="flex gap-3 py-4">
                       <div className="flex-1">
                         <p className="text-[11px] uppercase tracking-widest text-gold">{product.brand}</p>
-                        <p className="font-display text-lg leading-tight text-ivory">{product.name}</p>
-                        <p className="text-xs text-ivory/50">{PRESENTATION_LABELS[product.presentation]}</p>
+                        <p className="font-display text-lg leading-tight text-ivory">{displayName(product)}</p>
+                        <p className="text-xs text-ivory/50">
+                          {product.sizeMl ? `${formatMl(product.sizeMl)} · ` : ""}
+                          {PRESENTATION_LABELS[product.presentation]}
+                        </p>
                         <p className="mt-1 text-sm text-champagne">
                           {formatARS(product.priceARS * quantity)}{" "}
                           <span className="text-xs text-ivory/50">{formatUSD(product.priceUSD * quantity)}</span>

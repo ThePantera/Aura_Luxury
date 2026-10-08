@@ -11,7 +11,9 @@ import {
   formatARS,
   formatUSD,
 } from "@/lib/labels";
+import { SizeTag } from "@/components/ProductCard";
 import type { ProductView } from "@/lib/products";
+import { displayName } from "@/lib/size";
 import { useCart } from "@/store/cart";
 
 // Beneficios definidos en el PRD; no se prometen plazos ni costos de envío que el negocio no fijó.
@@ -63,8 +65,11 @@ export function ProductInfo({ product }: { product: ProductView }) {
           {product.brand}
           <span className="text-ivory/40"> · {CATEGORY_LABELS[product.category]}</span>
         </p>
-        <h2 className="mt-2 font-display text-[1.7rem] leading-[1.1] text-ivory sm:text-4xl">{product.name}</h2>
-        <p className="mt-1 text-sm italic text-ivory/65 sm:mt-2">{PRESENTATION_LABELS[product.presentation]}</p>
+        <h2 className="mt-2 font-display text-[1.7rem] leading-[1.1] text-ivory sm:text-4xl">{displayName(product)}</h2>
+        <p className="mt-2 flex flex-wrap items-center gap-2.5 text-sm text-ivory/65">
+          {product.sizeMl && <SizeTag ml={product.sizeMl} large />}
+          <span className="italic">{PRESENTATION_LABELS[product.presentation]}</span>
+        </p>
       </div>
 
       <div className="hairline" aria-hidden />

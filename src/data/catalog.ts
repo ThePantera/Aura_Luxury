@@ -10,6 +10,7 @@ export type CatalogProduct = {
   category: Category;
   gender: Gender;
   presentation: Presentation;
+  sizeMl: number;
   priceARS: number;
   // Si falta, se calcula con la cotización por defecto.
   priceUSD?: number;
@@ -31,6 +32,7 @@ export const catalog: CatalogProduct[] = [
     category: "Designer",
     gender: "Masculino",
     presentation: "Cerrado",
+    sizeMl: 60,
     priceARS: 518700,
     topNotes: ["Nuez moscada", "Canela", "Cardamomo", "Pomelo"],
     heartNotes: ["Lavanda"],
@@ -48,6 +50,7 @@ export const catalog: CatalogProduct[] = [
     category: "Arabian",
     gender: "Unisex",
     presentation: "Cerrado",
+    sizeMl: 100,
     priceARS: 56187.5,
     priceUSD: 36.25,
     topNotes: ["Canela", "Nuez moscada", "Bergamota"],
@@ -66,6 +69,7 @@ export const catalog: CatalogProduct[] = [
     category: "Designer",
     gender: "Masculino",
     presentation: "Cerrado",
+    sizeMl: 100,
     priceARS: 31785,
     topNotes: ["Melón", "Bergamota", "Menta"],
     heartNotes: ["Notas marinas", "Cardamomo"],
@@ -83,6 +87,7 @@ export const catalog: CatalogProduct[] = [
     category: "Designer",
     gender: "Masculino",
     presentation: "Cerrado",
+    sizeMl: 125,
     priceARS: 296595,
     topNotes: ["Lavanda", "Menta"],
     heartNotes: ["Vainilla", "Benjuí"],
@@ -100,6 +105,7 @@ export const catalog: CatalogProduct[] = [
     category: "Arabian",
     gender: "Femenino",
     presentation: "Cerrado",
+    sizeMl: 100,
     priceARS: 67812.5,
     priceUSD: 43.75,
     topNotes: ["Orquídea", "Heliotropo", "Mandarina"],

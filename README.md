@@ -39,7 +39,7 @@ En `/admin` (con el usuario y la contraseña de `.env`) se puede:
 
 ## Modelo de datos
 
-`Product` (ver `prisma/schema.prisma`): nombre, marca, categoría (`Arabian`, `Designer`, `Niche`, `Decant`), género (`Masculino`, `Femenino`, `Unisex`), presentación (`Cerrado`, `Tester`, `Mini Talla`), precios ARS y USD, notas de salida, corazón y fondo, usos recomendados (`Gym`, `Office`, `Night`, `Summer`, `Winter`), duración en horas, badge (`Best Seller`, `Viral`, `Offer`, `None`), imagen y stock.
+`Product` (ver `prisma/schema.prisma`): nombre, marca, categoría (`Arabian`, `Designer`, `Niche`, `Decant`), género (`Masculino`, `Femenino`, `Unisex`), presentación (`Cerrado`, `Tester`, `Mini Talla`), mililitros (columna `ML`; si falta se toma del nombre), precios ARS y USD, notas de salida, corazón y fondo, usos recomendados (`Gym`, `Office`, `Night`, `Summer`, `Winter`), duración en horas, badge (`Best Seller`, `Viral`, `Offer`, `None`), imagen y stock.
 
 ## Deploy en Vercel
 
