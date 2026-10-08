@@ -10,6 +10,7 @@ export type ProductView = {
   category: Category;
   gender: Gender;
   presentation: Presentation;
+  sizeMl: number | null;
   priceARS: number;
   priceUSD: number;
   topNotes: string[];

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Badge, Category, Gender, Presentation, Usage } from "@/generated/prisma/enums";
+import { parseSizeMl } from "@/lib/size";
 
 // Validación compartida por el formulario del panel y el importador de Excel/CSV.
 
@@ -127,6 +128,7 @@ export const productInputSchema = z
     category: categoryField,
     gender: withDefault(genderField, "Unisex"),
     presentation: withDefault(presentationField, "Cerrado"),
+    sizeMl: optionalNumberField("Mililitros").pipe(z.number().positive("Los ml deben ser mayores a 0").optional()),
     priceARS: numberField("Precio ARS").pipe(z.number().positive("El precio ARS debe ser mayor a 0")),
     priceUSD: optionalNumberField("Precio USD").pipe(z.number().nonnegative("El precio USD no puede ser negativo").optional()),
     topNotes: z.unknown().optional().transform(splitList),
@@ -153,6 +155,8 @@ export const productInputSchema = z
     return {
       ...input,
       slug,
+      // Si no se cargan los ml, se toman del nombre ("Sauvage Elixir 100 ml").
+      sizeMl: input.sizeMl ?? parseSizeMl(input.name) ?? null,
       recommendedUsage: [...new Set(input.recommendedUsage)],
       imageUrl: input.imageUrl || `/products/${slug}.webp`,
     };

@@ -26,7 +26,16 @@ function BottleSilhouette({ brand, shimmer }: { brand: string; shimmer: boolean 
   );
 }
 
-export function BottleImage({ src, name, brand }: { src: string; name: string; brand: string }) {
+type Props = {
+  src: string;
+  name: string;
+  brand: string;
+  sizes?: string;
+  // Solo la imagen visible al abrir la página debe cargarse con prioridad.
+  priority?: boolean;
+};
+
+export function BottleImage({ src, name, brand, sizes = "(min-width: 768px) 45vw, 80vw", priority = false }: Props) {
   const [status, setStatus] = useState<Status>("loading");
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -50,11 +59,11 @@ export function BottleImage({ src, name, brand }: { src: string; name: string; b
           src={src}
           alt=""
           fill
-          sizes="(min-width: 768px) 45vw, 80vw"
+          sizes={sizes}
           className={`object-contain transition-opacity duration-500 ${status === "loaded" ? "opacity-100" : "opacity-0"}`}
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("failed")}
-          priority
+          priority={priority}
         />
       )}
     </div>

@@ -11,7 +11,9 @@ import {
   formatARS,
   formatUSD,
 } from "@/lib/labels";
+import { SizeTag } from "@/components/ProductCard";
 import type { ProductView } from "@/lib/products";
+import { displayName } from "@/lib/size";
 import { useCart } from "@/store/cart";
 
 // Beneficios definidos en el PRD; no se prometen plazos ni costos de envío que el negocio no fijó.
@@ -57,20 +59,23 @@ export function ProductInfo({ product }: { product: ProductView }) {
   ];
 
   return (
-    <div className="mx-auto flex min-h-0 w-full max-w-2xl lg:max-h-full flex-col gap-3 overflow-y-auto rounded-[1.75rem] border border-gold/15 bg-[linear-gradient(160deg,rgba(38,33,22,0.72)_0%,rgba(20,19,17,0.82)_45%,rgba(14,14,13,0.9)_100%)] p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl no-scrollbar max-sm:px-4 max-sm:py-4 sm:gap-5 sm:p-8 lg:max-w-none lg:p-10 [&>*]:shrink-0">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div>
         <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-gold">
           {product.brand}
           <span className="text-ivory/40"> · {CATEGORY_LABELS[product.category]}</span>
         </p>
-        <h2 className="mt-2 font-display text-[1.7rem] leading-[1.05] text-ivory sm:text-5xl">{product.name}</h2>
-        <p className="mt-1 text-sm italic text-ivory/65 sm:mt-2 max-sm:[@media(max-height:700px)]:hidden">{PRESENTATION_LABELS[product.presentation]}</p>
+        <h2 className="mt-2 font-display text-[1.7rem] leading-[1.1] text-ivory sm:text-4xl">{displayName(product)}</h2>
+        <p className="mt-2 flex flex-wrap items-center gap-2.5 text-sm text-ivory/65">
+          {product.sizeMl && <SizeTag ml={product.sizeMl} large />}
+          <span className="italic">{PRESENTATION_LABELS[product.presentation]}</span>
+        </p>
       </div>
 
-      <div className="hairline [@media(max-height:700px)]:hidden" aria-hidden />
+      <div className="hairline" aria-hidden />
 
       <div>
-        <p className="font-display text-[1.75rem] leading-none tracking-tight text-champagne sm:text-[2.75rem] sm:leading-none">
+        <p className="font-display text-[1.75rem] leading-none tracking-tight text-champagne sm:text-4xl sm:leading-none">
           {formatARS(product.priceARS)}
         </p>
         <p className="mt-1.5 text-xs text-ivory/60 sm:text-sm">
@@ -78,7 +83,7 @@ export function ProductInfo({ product }: { product: ProductView }) {
         </p>
       </div>
 
-      <dl className="grid grid-cols-2 [@media(max-height:700px)]:hidden gap-x-5 gap-y-2 sm:grid-cols-4 sm:gap-y-3">
+      <dl className="grid grid-cols-2 gap-x-5 gap-y-2 sm:gap-y-3">
         {details.map(({ label, value, warn }) => (
           <div key={label} className="min-w-0">
             <dt className="text-[10px] uppercase tracking-[0.22em] text-ivory/50">{label}</dt>
@@ -147,7 +152,7 @@ export function ProductInfo({ product }: { product: ProductView }) {
         )}
       </AnimatePresence>
 
-      <ul className="hidden flex-wrap gap-x-5 gap-y-2 border-t border-gold/10 pt-4 text-xs text-ivory/65 sm:flex">
+      <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-gold/10 pt-4 text-xs text-ivory/65">
         {BENEFITS.map(({ icon: Icon, label }) => (
           <li key={label} className="flex items-center gap-1.5">
             <Icon className="size-4 text-gold" strokeWidth={1.5} aria-hidden />

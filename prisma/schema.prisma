@@ -51,6 +51,7 @@ model Product {
   category         Category
   gender           Gender       @default(Unisex)
   presentation     Presentation @default(Cerrado)
+  sizeMl           Float?
   priceARS         Decimal      @db.Decimal(12, 2)
   priceUSD         Decimal      @db.Decimal(10, 2)
   topNotes         String[]

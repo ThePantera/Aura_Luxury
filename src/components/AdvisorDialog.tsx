@@ -7,6 +7,7 @@ import type { Usage } from "@/generated/prisma/enums";
 import { recommend, type GenderPreference } from "@/lib/advisor";
 import { USAGE_OPTIONS, formatARS } from "@/lib/labels";
 import type { ProductView } from "@/lib/products";
+import { displayName, formatMl } from "@/lib/size";
 import { useCart } from "@/store/cart";
 
 const GENDERS: { value: GenderPreference; label: string }[] = [
@@ -115,8 +116,11 @@ export function AdvisorDialog({ products, onSelect, onClose }: Props) {
                 <li key={product.id} className="flex items-center gap-3 rounded-2xl border border-champagne/15 p-3">
                   <button type="button" onClick={() => onSelect(product)} className="flex-1 text-left">
                     <span className="block text-[11px] uppercase tracking-widest text-gold">{product.brand}</span>
-                    <span className="block font-display text-lg leading-tight text-ivory">{product.name}</span>
-                    <span className="text-sm text-champagne">{formatARS(product.priceARS)}</span>
+                    <span className="block font-display text-lg leading-tight text-ivory">{displayName(product)}</span>
+                    <span className="text-sm text-champagne">
+                      {product.sizeMl ? `${formatMl(product.sizeMl)} · ` : ""}
+                      {formatARS(product.priceARS)}
+                    </span>
                   </button>
                   <button
                     type="button"

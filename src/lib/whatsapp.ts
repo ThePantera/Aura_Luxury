@@ -1,5 +1,6 @@
 import { DEFAULT_WHATSAPP_PHONE } from "@/lib/defaults";
 import { PRESENTATION_LABELS } from "@/lib/labels";
+import { displayName, formatMl } from "@/lib/size";
 import { cartTotals, type CartItem } from "@/store/cart";
 
 
@@ -16,7 +17,8 @@ export function buildOrderMessage(items: CartItem[]) {
   const lines = items.map(({ product, quantity }) => {
     const ars = roundCents(product.priceARS * quantity);
     const usd = roundCents(product.priceUSD * quantity);
-    return `• ${quantity}x ${product.brand} ${product.name} (${PRESENTATION_LABELS[product.presentation]}) - $${amount(ars)} ($${amount(usd)} USD)`;
+    const size = product.sizeMl ? ` ${formatMl(product.sizeMl)}` : "";
+    return `• ${quantity}x ${product.brand} ${displayName(product)}${size} (${PRESENTATION_LABELS[product.presentation]}) - $${amount(ars)} ($${amount(usd)} USD)`;
   });
 
   return [
