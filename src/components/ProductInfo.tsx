@@ -44,7 +44,7 @@ export function ProductInfo({ product }: { product: ProductView }) {
     { label: "Salida", notes: product.topNotes },
     { label: "Corazón", notes: product.heartNotes },
     { label: "Fondo", notes: product.baseNotes },
-  ];
+  ].filter(({ notes }) => notes.length > 0);
 
   const details = [
     { label: "Duración", value: `Hasta ${product.durationHours} h` },
@@ -106,19 +106,21 @@ export function ProductInfo({ product }: { product: ProductView }) {
           {soldOut ? "Sin stock" : added ? "Agregado" : "Agregar al carrito"}
         </motion.button>
 
-        <button
-          type="button"
-          onClick={() => setNotesOpen((value) => !value)}
-          aria-expanded={notesOpen}
-          className={`flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-medium transition duration-300 sm:h-14 sm:px-6 ${
-            notesOpen
-              ? "border-gold bg-gold/15 text-ivory"
-              : "border-gold/35 text-champagne hover:border-gold hover:bg-gold/10"
-          }`}
-        >
-          <Feather className="size-4" aria-hidden />
-          Ver notas
-        </button>
+        {pyramid.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setNotesOpen((value) => !value)}
+            aria-expanded={notesOpen}
+            className={`flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-medium transition duration-300 sm:h-14 sm:px-6 ${
+              notesOpen
+                ? "border-gold bg-gold/15 text-ivory"
+                : "border-gold/35 text-champagne hover:border-gold hover:bg-gold/10"
+            }`}
+          >
+            <Feather className="size-4" aria-hidden />
+            Ver notas
+          </button>
+        )}
       </div>
 
       <AnimatePresence initial={false}>
