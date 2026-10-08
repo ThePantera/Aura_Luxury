@@ -1,6 +1,6 @@
 # Aura Luxury
 
-E-commerce de perfumería de diseñador, árabe y de nicho, con experiencia 100vh sin scroll, precios en ARS y USD y checkout por WhatsApp.
+E-commerce de perfumería de diseñador, árabe y de nicho, con catálogo en grilla (búsqueda, filtros y orden), precios en ARS y USD y checkout por WhatsApp.
 
 Stack: Next.js (App Router), TypeScript, TailwindCSS, Lucide, Prisma y PostgreSQL.
 
