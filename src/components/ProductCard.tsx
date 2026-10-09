@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { BottleImage } from "@/components/BottleImage";
 import { BADGES, PRESENTATION_BADGES, PRESENTATION_LABELS, formatARS, formatUSD } from "@/lib/labels";
 import type { ProductView } from "@/lib/products";
@@ -10,7 +10,8 @@ import { useCart } from "@/store/cart";
 
 type Props = { product: ProductView; onOpen: (product: ProductView) => void };
 
-export function ProductCard({ product, onOpen }: Props) {
+// Memo: abrir una ficha o filtrar no vuelve a dibujar las tarjetas que no cambiaron.
+export const ProductCard = memo(function ProductCard({ product, onOpen }: Props) {
   const add = useCart((state) => state.add);
   const [added, setAdded] = useState(false);
 
@@ -41,7 +42,7 @@ export function ProductCard({ product, onOpen }: Props) {
           />
         </div>
         {badge && (
-          <span className="absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full border border-gold/30 bg-black/55 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-champagne backdrop-blur-md sm:text-[10px]">
+          <span className="absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full border border-gold/30 bg-black/70 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.16em] text-champagne sm:text-[10px]">
             <badge.icon className="size-3 text-gold" strokeWidth={1.75} aria-hidden />
             {badge.label}
           </span>
@@ -90,7 +91,7 @@ export function ProductCard({ product, onOpen }: Props) {
       </div>
     </article>
   );
-}
+});
 
 export function SizeTag({ ml, large = false }: { ml: number; large?: boolean }) {
   return (

@@ -3,6 +3,7 @@
 import { MessageCircle, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
+import { useScrollLock } from "@/hooks/useScrollLock";
 import { PRESENTATION_LABELS, formatARS, formatUSD } from "@/lib/labels";
 import { displayName, formatMl } from "@/lib/size";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -11,6 +12,7 @@ import { cartTotals, useCart } from "@/store/cart";
 export function CartDrawer({ whatsappPhone }: { whatsappPhone: string }) {
   const { items, isOpen, close, setQuantity, remove } = useCart();
   const totals = cartTotals(items);
+  useScrollLock(isOpen);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -23,7 +25,7 @@ export function CartDrawer({ whatsappPhone }: { whatsappPhone: string }) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex justify-end bg-matte/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex justify-end bg-black/75"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

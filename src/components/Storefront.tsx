@@ -2,7 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 import { AnimatePresence } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AdvisorDialog } from "@/components/AdvisorDialog";
 import { BenefitsTicker } from "@/components/BenefitsTicker";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
 import type { Badge, Category } from "@/generated/prisma/enums";
+import { useScrollLock } from "@/hooks/useScrollLock";
 import type { ProductView } from "@/lib/products";
 import { matchesQuery } from "@/lib/search";
 import { productPath } from "@/lib/site";
@@ -95,20 +96,22 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
   };
 
   // La barra de direcciones refleja el perfume abierto para que el link se pueda copiar y compartir.
-  const openProduct = (product: ProductView) => {
+  const openProduct = useCallback((product: ProductView) => {
     setAdvisorOpen(false);
     setSelected(product);
     window.history.replaceState(null, "", productPath(product.slug));
-  };
+  }, []);
 
-  const closeProduct = () => {
+  const closeProduct = useCallback(() => {
     setSelected(null);
     window.history.replaceState(null, "", "/");
-  };
+  }, []);
+
+  useScrollLock(selected !== null || advisorOpen);
 
   return (
-    <div className="h-dvh overflow-y-auto overscroll-contain">
-      <div className="sticky top-0 z-40 border-b border-gold/10 bg-matte/75 backdrop-blur-xl">
+    <div className="min-h-dvh">
+      <div className="sticky top-0 z-40 border-b border-gold/10 bg-matte/95">
         <Header onSearch={focusSearch} onAdvisor={() => setAdvisorOpen(true)} />
       </div>
       <BenefitsTicker />
@@ -143,7 +146,7 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
             <>
               <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
                 {visible.slice(0, limit).map((product) => (
-                  <li key={product.id} className="flex">
+                  <li key={product.id} className="catalog-item flex">
                     <ProductCard product={product} onOpen={openProduct} />
                   </li>
                 ))}
