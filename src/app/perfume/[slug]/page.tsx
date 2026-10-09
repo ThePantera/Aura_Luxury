@@ -7,7 +7,12 @@ import { getSettings } from "@/lib/settings";
 import { displayName, formatMl } from "@/lib/size";
 import { productPath } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+// Cada ficha se arma la primera vez que alguien la abre y queda en caché como la portada.
+export const revalidate = 300;
+
+export function generateStaticParams() {
+  return [];
+}
 
 type Props = { params: Promise<{ slug: string }> };
 
