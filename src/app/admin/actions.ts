@@ -8,7 +8,7 @@ import { requireAdmin } from "@/lib/admin-session";
 import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken, credentialsMatch } from "@/lib/auth";
 import { readCatalogFile, validateRows } from "@/lib/catalog-import";
 import { prisma } from "@/lib/prisma";
-import { formatIssues, productInputSchema, type ProductInput } from "@/lib/product-input";
+import { formatIssues, placeholderImageUrl, productInputSchema, type ProductInput } from "@/lib/product-input";
 import { getSettings } from "@/lib/settings";
 
 export type FormState = { error?: string; message?: string };
@@ -118,7 +118,10 @@ export async function importCatalog(_: ImportState, formData: FormData): Promise
   await prisma.$transaction(
     valid.map(({ product }) => {
       const data = toProductData(product, usdRate);
-      return prisma.product.upsert({ where: { slug: data.slug }, update: data, create: data });
+      // Si la fila no trae imagen, el perfume existente conserva la foto que ya tenía.
+      const { imageUrl, ...withoutImage } = data;
+      const update = imageUrl === placeholderImageUrl(data.slug) ? withoutImage : data;
+      return prisma.product.upsert({ where: { slug: data.slug }, update, create: data });
     }),
   );
 
