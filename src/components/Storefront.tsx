@@ -8,6 +8,7 @@ import { BenefitsTicker } from "@/components/BenefitsTicker";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CatalogToolbar, EMPTY_FILTERS, type CatalogFilters } from "@/components/CatalogToolbar";
 import { Header } from "@/components/Header";
+import { Pagination } from "@/components/Pagination";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
 import type { Badge, Category } from "@/generated/prisma/enums";
@@ -20,17 +21,20 @@ import { useCart } from "@/store/cart";
 
 type Props = { products: ProductView[]; whatsappPhone: string; initialSlug?: string };
 
-// Con más de 300 perfumes se muestran de a tandas para que la página cargue rápido en el celular.
+// El catálogo se muestra por páginas para que el celular nunca tenga que dibujar cientos de tarjetas.
 const PAGE_SIZE = 24;
 
-// En "Destacados" primero van los perfumes con insignia comercial y después el resto en el orden cargado.
+// "Más vendidos" se basa en la insignia que se carga en el panel: Best Seller, Viral y Oferta, en ese orden.
 const BADGE_RANK: Record<Badge, number> = { BestSeller: 0, Viral: 1, Offer: 2, None: 3 };
+
+// En "Destacados" los árabes van primero, después nicho, diseñador y decants.
+const CATEGORY_RANK: Record<Category, number> = { Arabian: 0, Niche: 1, Designer: 2, Decant: 3 };
 
 const byName = new Intl.Collator("es", { sensitivity: "base" });
 
 export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
   const [filters, setFilters] = useState<CatalogFilters>(EMPTY_FILTERS);
-  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [page, setPage] = useState(1);
   // Al entrar por /perfume/<slug> la ficha arranca abierta sobre el catálogo.
   const [selected, setSelected] = useState<ProductView | null>(
     () => products.find((product) => product.slug === initialSlug) ?? null,
@@ -44,19 +48,12 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
     useCart.persist.rehydrate();
   }, []);
 
-  const categoryCounts = useMemo(() => {
-    const counts: Record<Category, number> = { Designer: 0, Arabian: 0, Niche: 0, Decant: 0 };
-    for (const product of products) counts[product.category] += 1;
-    return counts;
-  }, [products]);
+  const categories = useMemo(() => [...new Set(products.map((product) => product.category))], [products]);
 
-  const brands = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const product of products) counts.set(product.brand, (counts.get(product.brand) ?? 0) + 1);
-    return [...counts]
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => byName.compare(a.name, b.name));
-  }, [products]);
+  const brands = useMemo(
+    () => [...new Set(products.map((product) => product.brand))].sort(byName.compare),
+    [products],
+  );
 
   const visible = useMemo(() => {
     const matches = products.filter(
@@ -75,19 +72,35 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
         return matches.sort((a, b) => b.priceARS - a.priceARS);
       case "name":
         return matches.sort((a, b) => byName.compare(`${a.brand} ${a.name}`, `${b.brand} ${b.name}`));
+      case "bestSeller":
+        return matches.sort(
+          (a, b) => BADGE_RANK[a.badge] - BADGE_RANK[b.badge] || CATEGORY_RANK[a.category] - CATEGORY_RANK[b.category],
+        );
       default:
-        return matches.sort((a, b) => BADGE_RANK[a.badge] - BADGE_RANK[b.badge]);
+        return matches.sort(
+          (a, b) => CATEGORY_RANK[a.category] - CATEGORY_RANK[b.category] || BADGE_RANK[a.badge] - BADGE_RANK[b.badge],
+        );
     }
   }, [products, filters]);
 
+  const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageProducts = visible.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
   const updateFilters = (patch: Partial<CatalogFilters>) => {
     setFilters((current) => ({ ...current, ...patch }));
-    setLimit(PAGE_SIZE);
+    setPage(1);
   };
 
   const resetFilters = () => {
     setFilters(EMPTY_FILTERS);
-    setLimit(PAGE_SIZE);
+    setPage(1);
+  };
+
+  // Al cambiar de página se vuelve al principio del catálogo, sin animar todo el recorrido.
+  const goToPage = (next: number) => {
+    setPage(next);
+    catalogRef.current?.scrollIntoView({ block: "start" });
   };
 
   const focusSearch = () => {
@@ -123,7 +136,7 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
             Perfumería original, <span className="italic text-gold-gradient">de diseñador a nicho</span>
           </h1>
           <p className="mt-3 max-w-xl text-sm text-ivory/60 sm:text-base">
-            {products.length} perfumes de diseñador, árabes y de nicho, con precios en pesos y dólares.
+            Perfumes árabes, de nicho y de diseñador, con precios en pesos y dólares.
           </p>
         </section>
 
@@ -133,42 +146,21 @@ export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
             filters={filters}
             onChange={updateFilters}
             onReset={() => updateFilters({ brand: null, gender: null, presentation: null, usage: null })}
-            categoryCounts={categoryCounts}
-            total={products.length}
+            categories={categories}
             brands={brands}
           />
 
-          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-ivory/50" aria-live="polite">
-            {visible.length === 1 ? "1 fragancia" : `${visible.length} fragancias`}
-          </p>
-
           {visible.length > 0 ? (
             <>
-              <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
-                {visible.slice(0, limit).map((product) => (
+              <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
+                {pageProducts.map((product) => (
                   <li key={product.id} className="catalog-item flex">
                     <ProductCard product={product} onOpen={openProduct} />
                   </li>
                 ))}
               </ul>
 
-              {limit < visible.length && (
-                <div className="mt-10 flex flex-col items-center gap-3">
-                  <p className="text-xs text-ivory/50">
-                    Mostrando {limit} de {visible.length}
-                  </p>
-                  <div className="h-px w-40 overflow-hidden bg-white/10">
-                    <div className="bg-gold-sheen h-full" style={{ width: `${(limit / visible.length) * 100}%` }} />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setLimit((current) => current + PAGE_SIZE)}
-                    className="mt-2 rounded-full border border-gold/50 px-8 py-3 text-sm font-medium text-champagne transition hover:border-gold hover:bg-gold/10"
-                  >
-                    Ver más fragancias
-                  </button>
-                </div>
-              )}
+              <Pagination page={currentPage} pageCount={pageCount} onChange={goToPage} />
             </>
           ) : (
             <div className="flex flex-col items-center gap-3 py-20 text-center">

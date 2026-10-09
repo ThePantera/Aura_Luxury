@@ -46,8 +46,8 @@ function toProductData(input: ProductInput, usdRate: number) {
 }
 
 function refreshStore() {
-  revalidatePath("/");
-  revalidatePath("/admin");
+  // Regenera la portada, las fichas /perfume/... y el panel con los datos nuevos.
+  revalidatePath("/", "layout");
 }
 
 export async function saveProduct(_: FormState, formData: FormData): Promise<FormState> {

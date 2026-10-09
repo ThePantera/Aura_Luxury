@@ -13,10 +13,11 @@ import {
 } from "lucide-react";
 import type { Badge, Category, Gender, Presentation, Usage } from "@/generated/prisma/enums";
 
+// El orden define el de las pestañas del catálogo: los árabes van primero.
 export const CATEGORY_LABELS: Record<Category, string> = {
-  Designer: "Diseñador",
   Arabian: "Árabes",
   Niche: "Nicho & Lujo",
+  Designer: "Diseñador",
   Decant: "Decants & Travel",
 };
 
