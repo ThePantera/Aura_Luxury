@@ -95,12 +95,10 @@
   }
 }
 
+/* La página se desplaza con el scroll nativo del navegador, que es el más fluido en celulares. */
 html,
 body {
-  height: 100%;
-  overflow: hidden;
-  /* Sin rebote ni "pull to refresh": la tienda se comporta como una app. */
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 * {
@@ -108,27 +106,10 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(ellipse 60% 55% at 28% 42%, rgb(212 175 55 / 0.09) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 45% at 85% 15%, rgb(230 198 135 / 0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 90% 60% at 50% 110%, rgb(0 0 0 / 0.6) 0%, transparent 70%),
-    linear-gradient(180deg, #100e0a 0%, var(--color-matte) 60%);
   background-color: var(--color-matte);
   color: var(--color-ivory);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-}
-
-/* Grano de película muy sutil sobre toda la tienda. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
@@ -141,4 +122,26 @@ body::before {
   .animate-marquee {
     animation: none;
   }
+}
+
+/* Fondo con brillo dorado y grano de película muy sutil: una capa fija que se pinta una sola vez
+   y no se vuelve a dibujar al desplazar (sin mezcla de capas ni desenfoques). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 60% 55% at 28% 42%, rgb(212 175 55 / 0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 45% at 85% 15%, rgb(230 198 135 / 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgb(0 0 0 / 0.6) 0%, transparent 70%),
+    linear-gradient(180deg, #100e0a 0%, var(--color-matte) 60%);
+}
+
+/* Las tarjetas fuera de pantalla no se dibujan hasta acercarse, así el scroll no carga con todo el catálogo. */
+.catalog-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 360px;
 }

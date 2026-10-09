@@ -33,14 +33,15 @@ export function ProductDialog({ product, products, whatsappPhone, onSelect, onCl
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-end justify-center bg-matte/75 backdrop-blur-sm sm:items-center sm:p-6"
+      transition={{ duration: 0.18 }}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/80 sm:items-center sm:p-6"
       onClick={onClose}
     >
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 40, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 32 }}
+        transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
         role="dialog"
         aria-modal="true"
         aria-label={`${product.brand} ${displayName(product)}`}
@@ -51,7 +52,7 @@ export function ProductDialog({ product, products, whatsappPhone, onSelect, onCl
           type="button"
           onClick={onClose}
           aria-label="Cerrar"
-          className="orb absolute right-3 top-3 z-10 size-10 bg-black/50 backdrop-blur-md"
+          className="orb absolute right-3 top-3 z-10 size-10 bg-black/70"
         >
           <X className="size-5" aria-hidden />
         </button>
