@@ -158,9 +158,12 @@ export const productInputSchema = z
       // Si no se cargan los ml, se toman del nombre ("Sauvage Elixir 100 ml").
       sizeMl: input.sizeMl ?? parseSizeMl(input.name) ?? null,
       recommendedUsage: [...new Set(input.recommendedUsage)],
-      imageUrl: input.imageUrl || `/products/${slug}.webp`,
+      imageUrl: input.imageUrl || placeholderImageUrl(slug),
     };
   });
+
+// Ruta usada cuando no se carga una foto; la tienda muestra el frasco dorado si no existe.
+export const placeholderImageUrl = (slug: string) => `/products/${slug}.webp`;
 
 export type ProductInput = z.infer<typeof productInputSchema>;
 

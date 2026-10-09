@@ -60,7 +60,8 @@ export function BottleImage({ src, name, brand, sizes = "(min-width: 768px) 45vw
           alt=""
           fill
           sizes={sizes}
-          className={`object-contain transition-opacity duration-500 ${status === "loaded" ? "opacity-100" : "opacity-0"}`}
+          // Las fotos de catálogo suelen venir con fondo blanco: se muestran como una lámina clara con bordes redondeados.
+          className={`rounded-2xl bg-white object-contain p-[6%] transition-opacity duration-500 ${status === "loaded" ? "opacity-100" : "opacity-0"}`}
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("failed")}
           priority={priority}

@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Check, Feather, MessageCircle, ShoppingBag, Truck } from "lucide-react";
+import { BadgeCheck, Check, Feather, Link2, MessageCircle, Share2, ShoppingBag, Truck } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
@@ -13,7 +13,9 @@ import {
 } from "@/lib/labels";
 import { SizeTag } from "@/components/ProductCard";
 import type { ProductView } from "@/lib/products";
+import { productPath } from "@/lib/site";
 import { displayName } from "@/lib/size";
+import { buildProductWhatsAppUrl } from "@/lib/whatsapp";
 import { useCart } from "@/store/cart";
 
 // Beneficios definidos en el PRD; no se prometen plazos ni costos de envío que el negocio no fijó.
@@ -29,8 +31,33 @@ function stockLabel(stock: number) {
   return "Disponible";
 }
 
-export function ProductInfo({ product }: { product: ProductView }) {
+export function ProductInfo({ product, whatsappPhone }: { product: ProductView; whatsappPhone: string }) {
   const add = useCart((state) => state.add);
+  const [copied, setCopied] = useState(false);
+  const [productUrl, setProductUrl] = useState(productPath(product.slug));
+
+  // El dominio se toma del navegador para que el link funcione igual en la vista previa y en producción.
+  useEffect(() => setProductUrl(window.location.origin + productPath(product.slug)), [product.slug]);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1800);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  const share = async () => {
+    const title = `${product.brand} ${displayName(product)}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url: productUrl });
+      } catch {
+        // El usuario cerró el menú de compartir.
+      }
+      return;
+    }
+    await navigator.clipboard.writeText(productUrl);
+    setCopied(true);
+  };
   const [notesOpen, setNotesOpen] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -126,6 +153,26 @@ export function ProductInfo({ product }: { product: ProductView }) {
             Ver notas
           </button>
         )}
+      </div>
+
+      <div className="flex gap-2.5 sm:gap-3">
+        <a
+          href={buildProductWhatsAppUrl(product, productUrl, whatsappPhone)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-11 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#25D366]/60 px-3 text-sm font-medium text-[#5be08f] transition hover:bg-[#25D366]/10"
+        >
+          <MessageCircle className="size-4" aria-hidden />
+          Consultar por WhatsApp
+        </a>
+        <button
+          type="button"
+          onClick={share}
+          className="flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-gold/35 px-4 text-sm text-champagne transition hover:border-gold hover:bg-gold/10"
+        >
+          {copied ? <Link2 className="size-4" aria-hidden /> : <Share2 className="size-4" aria-hidden />}
+          {copied ? "Link copiado" : "Compartir"}
+        </button>
       </div>
 
       <AnimatePresence initial={false}>
