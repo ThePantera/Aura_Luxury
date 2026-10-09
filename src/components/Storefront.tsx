@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageCircle } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AdvisorDialog } from "@/components/AdvisorDialog";
@@ -12,9 +13,11 @@ import { ProductDialog } from "@/components/ProductDialog";
 import type { Badge, Category } from "@/generated/prisma/enums";
 import type { ProductView } from "@/lib/products";
 import { matchesQuery } from "@/lib/search";
+import { productPath } from "@/lib/site";
+import { buildGeneralWhatsAppUrl } from "@/lib/whatsapp";
 import { useCart } from "@/store/cart";
 
-type Props = { products: ProductView[]; whatsappPhone: string };
+type Props = { products: ProductView[]; whatsappPhone: string; initialSlug?: string };
 
 // Con más de 300 perfumes se muestran de a tandas para que la página cargue rápido en el celular.
 const PAGE_SIZE = 24;
@@ -24,10 +27,13 @@ const BADGE_RANK: Record<Badge, number> = { BestSeller: 0, Viral: 1, Offer: 2, N
 
 const byName = new Intl.Collator("es", { sensitivity: "base" });
 
-export function Storefront({ products, whatsappPhone }: Props) {
+export function Storefront({ products, whatsappPhone, initialSlug }: Props) {
   const [filters, setFilters] = useState<CatalogFilters>(EMPTY_FILTERS);
   const [limit, setLimit] = useState(PAGE_SIZE);
-  const [selected, setSelected] = useState<ProductView | null>(null);
+  // Al entrar por /perfume/<slug> la ficha arranca abierta sobre el catálogo.
+  const [selected, setSelected] = useState<ProductView | null>(
+    () => products.find((product) => product.slug === initialSlug) ?? null,
+  );
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const catalogRef = useRef<HTMLElement>(null);
@@ -88,9 +94,16 @@ export function Storefront({ products, whatsappPhone }: Props) {
     searchRef.current?.focus({ preventScroll: true });
   };
 
+  // La barra de direcciones refleja el perfume abierto para que el link se pueda copiar y compartir.
   const openProduct = (product: ProductView) => {
     setAdvisorOpen(false);
     setSelected(product);
+    window.history.replaceState(null, "", productPath(product.slug));
+  };
+
+  const closeProduct = () => {
+    setSelected(null);
+    window.history.replaceState(null, "", "/");
   };
 
   return (
@@ -179,7 +192,16 @@ export function Storefront({ products, whatsappPhone }: Props) {
       </footer>
 
       <AnimatePresence>
-        {selected && <ProductDialog key={selected.id} product={selected} onClose={() => setSelected(null)} />}
+        {selected && (
+          <ProductDialog
+            key={selected.id}
+            product={selected}
+            products={products}
+            whatsappPhone={whatsappPhone}
+            onSelect={openProduct}
+            onClose={closeProduct}
+          />
+        )}
       </AnimatePresence>
 
       <AnimatePresence>
@@ -187,6 +209,16 @@ export function Storefront({ products, whatsappPhone }: Props) {
           <AdvisorDialog products={products} onSelect={openProduct} onClose={() => setAdvisorOpen(false)} />
         )}
       </AnimatePresence>
+
+      <a
+        href={buildGeneralWhatsAppUrl(whatsappPhone)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Escribinos por WhatsApp"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 z-30 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_14px_30px_-10px_rgba(37,211,102,0.7)] transition hover:scale-105 sm:left-6"
+      >
+        <MessageCircle className="size-7" strokeWidth={1.75} aria-hidden />
+      </a>
 
       <CartDrawer whatsappPhone={whatsappPhone} />
     </div>

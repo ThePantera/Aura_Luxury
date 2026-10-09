@@ -1,6 +1,7 @@
 import { DEFAULT_WHATSAPP_PHONE } from "@/lib/defaults";
 import { PRESENTATION_LABELS } from "@/lib/labels";
 import { displayName, formatMl } from "@/lib/size";
+import type { ProductView } from "@/lib/products";
 import { cartTotals, type CartItem } from "@/store/cart";
 
 
@@ -35,4 +36,22 @@ export function buildOrderMessage(items: CartItem[]) {
 
 export function buildWhatsAppUrl(items: CartItem[], phone = DEFAULT_WHATSAPP_PHONE) {
   return `https://wa.me/${phone}?text=${encodeURIComponent(buildOrderMessage(items))}`;
+}
+
+const whatsAppLink = (phone: string, message: string) => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+export function buildGeneralWhatsAppUrl(phone = DEFAULT_WHATSAPP_PHONE) {
+  return whatsAppLink(phone, "¡Hola Aura Luxury! 👋 Quiero hacer una consulta.");
+}
+
+// Consulta por un perfume puntual, con el link a su página para que el vendedor lo vea al instante.
+export function buildProductWhatsAppUrl(product: ProductView, productUrl: string, phone = DEFAULT_WHATSAPP_PHONE) {
+  const size = product.sizeMl ? ` ${formatMl(product.sizeMl)}` : "";
+  return whatsAppLink(
+    phone,
+    [
+      `¡Hola Aura Luxury! 👋 Quiero consultar por ${product.brand} ${displayName(product)}${size} (${PRESENTATION_LABELS[product.presentation]}), $${amount(product.priceARS)}.`,
+      productUrl,
+    ].join("\n"),
+  );
 }

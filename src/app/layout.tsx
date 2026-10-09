@@ -1,5 +1,7 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -13,6 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Aura Luxury",
   description:
     "Perfumería de diseñador, árabe y de nicho. Fragancias 100% originales con precios en ARS y USD.",
@@ -33,6 +36,7 @@ export default function RootLayout({
     <html lang="es" className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased">
         {children}
+        <Analytics />
       </body>
     </html>
   );

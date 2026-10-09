@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { catalog, toUSD } from "@/data/catalog";
 import type { Badge, Category, Gender, Presentation, Usage } from "@/generated/prisma/enums";
 
@@ -23,7 +24,8 @@ export type ProductView = {
   stock: number;
 };
 
-export async function getProducts(): Promise<ProductView[]> {
+// Cacheado por request: la página de un perfume lo usa para la vista previa y para la tienda.
+export const getProducts = cache(async (): Promise<ProductView[]> => {
   // Sin base configurada (preview o desarrollo rápido) se muestra el catálogo de ejemplo.
   if (!process.env.DATABASE_URL) {
     return catalog.map((product) => ({
@@ -43,4 +45,4 @@ export async function getProducts(): Promise<ProductView[]> {
     priceARS: Number(row.priceARS),
     priceUSD: Number(row.priceUSD),
   }));
-}
+});

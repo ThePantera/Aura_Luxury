@@ -2,16 +2,26 @@
 
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BottleImage } from "@/components/BottleImage";
 import { ProductInfo } from "@/components/ProductInfo";
+import { formatARS } from "@/lib/labels";
 import type { ProductView } from "@/lib/products";
-import { displayName } from "@/lib/size";
+import { relatedProducts } from "@/lib/related";
+import { displayName, formatMl } from "@/lib/size";
 
-type Props = { product: ProductView; onClose: () => void };
+type Props = {
+  product: ProductView;
+  products: ProductView[];
+  whatsappPhone: string;
+  onSelect: (product: ProductView) => void;
+  onClose: () => void;
+};
 
 // Ficha completa del perfume: en celular sube como hoja desde abajo, en escritorio es un modal a dos columnas.
-export function ProductDialog({ product, onClose }: Props) {
+export function ProductDialog({ product, products, whatsappPhone, onSelect, onClose }: Props) {
+  const related = useMemo(() => relatedProducts(product, products), [product, products]);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -53,7 +63,32 @@ export function ProductDialog({ product, onClose }: Props) {
         </div>
 
         <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pb-8 md:max-h-[92dvh] md:overflow-y-auto md:py-10 md:pr-10 md:no-scrollbar">
-          <ProductInfo product={product} />
+          <ProductInfo product={product} whatsappPhone={whatsappPhone} />
+
+          {related.length > 0 && (
+            <section className="mt-6 border-t border-gold/10 pt-5" aria-label="También te puede gustar">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-gold">También te puede gustar</p>
+              <ul className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4">
+                {related.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => onSelect(item)}
+                      className="flex h-full w-full flex-col gap-1.5 rounded-xl border border-gold/10 bg-black/20 p-2 text-left transition hover:border-gold/40"
+                    >
+                      <div className="relative aspect-square w-full">
+                        <BottleImage src={item.imageUrl} name={item.name} brand={item.brand} sizes="120px" />
+                      </div>
+                      <p className="truncate text-[9px] uppercase tracking-[0.18em] text-gold">{item.brand}</p>
+                      <p className="line-clamp-2 text-xs leading-snug text-ivory/90">{displayName(item)}</p>
+                      {item.sizeMl && <p className="text-[11px] text-champagne">{formatMl(item.sizeMl)}</p>}
+                      <p className="mt-auto font-display text-sm text-champagne">{formatARS(item.priceARS)}</p>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </motion.div>
     </motion.div>
